@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import { connectDb } from "./db/index.js";
 import { app, server } from "./socket/socket.js";
+import severless from "serverless-http"
 
 dotenv.config();
 const port = process.env.PORT || 8000;
@@ -36,3 +37,6 @@ server.listen(port, () => {
   connectDb();
   console.log(`Server is running on port http://localhost:${port}`);
 });
+
+
+export const handler = severless(app)
