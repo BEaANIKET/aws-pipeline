@@ -1,0 +1,38 @@
+name: GitHub Actions Demo
+
+on: 
+  push: 
+    branches: 
+      - master
+
+jobs:
+  deploy_lambda:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the repository
+      - uses: actions/checkout@v2
+
+      # Set up Node.js environment
+      - uses: actions/setup-node@v2
+        with: 
+          node-version: '12'
+
+      # Install dependencies
+      - name: Install Dependencies
+        run: npm install
+        env: 
+          CI: true
+
+      # Build the project (if applicable)
+      - name: Build Project
+        run: npm run build
+
+      # Deploy to AWS Lambda
+      - name: Deploy to AWS Lambda
+        uses: appleboy/lambda-action@master
+        with:
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_region: 'eu-north-1'
+          function_name: 'firstproject'
+          zip_file: './dist/function.zip' # Path to your zipped Lambda function
